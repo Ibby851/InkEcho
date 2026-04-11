@@ -1,0 +1,257 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  {% tailwind_css %}
+  <title>Home — InkEcho</title>
+   <script src="{% static 'django_htmx/htmx.min.js' %}"></script>
+</head>
+<body class="bg-ink-bg text-ink-text antialiased min-h-screen">
+
+  <!-- Header with Logout -->
+  <header class="sticky top-0 z-50 bg-ink-bg/95 backdrop-blur-sm border-b border-ink-light shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/" class="text-3xl font-extrabold text-ink-accent tracking-tight">InkEcho</a>
+        <span class="text-sm text-ink-gray hidden sm:inline">Home</span>
+      </div>
+      
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-ink-gray hover:text-ink-accent transition hidden sm:block">Explore</a>
+        
+        <!-- Avatar -->
+        <div class="w-10 h-10 rounded-full bg-ink-accent-light flex items-center justify-center text-white font-semibold shadow-sm">
+          I
+        </div>
+
+        <!-- Logout Form – placed here, next to avatar -->
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit"
+                  class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl shadow-md transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+            Logout
+          </button>
+        </form>
+
+        <button class="md:hidden text-ink-text text-2xl">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-[calc(100vh-73px)]">
+
+    <!-- Sidebar -->
+    <aside class="hidden md:block w-72 bg-white border-r border-ink-light flex-shrink-0">
+      <nav class="py-8 px-6 space-y-2">
+        <a href="#" class="flex items-center gap-4 px-5 py-3 bg-ink-accent/10 text-ink-accent rounded-xl font-medium">
+          <span>🏠</span> Home
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>📚</span> Library
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>📰</span> My Blogs
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>📖</span> My Books
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>✍️</span> New Post / Chapter
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>⚙️</span> Settings
+        </a>
+      </nav>
+
+      <div class="px-6 mt-12">
+        <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-ink-accent/20 to-ink-light h-48 flex items-center justify-center">
+          <span class="text-8xl opacity-40">✨</span>
+        </div>
+        <p class="text-center mt-4 text-sm text-ink-gray italic">
+          "Every word you write echoes somewhere."
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 md:p-10 overflow-auto">
+
+      <div class="max-w-6xl mx-auto">
+
+        <!-- Welcome -->
+        <header class="mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">
+            Welcome back, {{ request.user.username }}
+          </h1>
+          <p class="text-xl text-ink-gray">
+            Your creative space is ready. Here's what's new and waiting for you.
+          </p>
+        </header>
+
+        <!-- Quick Actions -->
+        <section class="mb-16">
+          <h2 class="text-3xl font-bold mb-8">Quick Actions</h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {% if request.user.pen_name %}
+            <a href="{% url 'blog_create' %}" class="bg-white p-8 rounded-2xl shadow-md border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="text-4xl mb-4 group-hover:text-ink-accent transition">✍️</div>
+              <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">New Blog Post</h3>
+              <p class="text-ink-gray text-sm">Share a thought or reflection in minutes.</p>
+            </a>
+          {% endif %}
+
+            <a href="#" class="bg-white p-8 rounded-2xl shadow-md border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="text-4xl mb-4 group-hover:text-ink-accent transition">📖</div>
+              <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Continue a Book</h3>
+              <p class="text-ink-gray text-sm">Pick up your latest chapter or start a new one.</p>
+            </a>
+
+            <a href="#" class="bg-white p-8 rounded-2xl shadow-md border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="text-4xl mb-4 group-hover:text-ink-accent transition">📚</div>
+              <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">My Library</h3>
+              <p class="text-ink-gray text-sm">Open your saved books and reading list.</p>
+            </a>
+
+            <a href="#" class="bg-white p-8 rounded-2xl shadow-md border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="text-4xl mb-4 group-hover:text-ink-accent transition">🔍</div>
+              <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Discover More</h3>
+              <p class="text-ink-gray text-sm">Explore new voices from writers near and far.</p>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- Recent Blogs -->
+        <section class="mb-16">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold">Recent Blogs</h2>
+            <a href="{% url 'blog_list' %}" class="text-ink-accent font-medium hover:underline">View All →</a>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" hx-get= {% url 'recent_blogs' %} hx-swap='innerHTML' hx-target='this' hx-trigger='load'>
+            {% comment %} <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/20 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-30">🌆</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Rainy Afternoons in Wuse</h3>
+                <p class="text-ink-gray text-sm mb-4 line-clamp-3">
+                  How the rain turns Abuja quiet and gives birth to new ideas...
+                </p>
+                <div class="flex justify-between text-xs text-ink-gray mt-4">
+                  <span>@abujawriter • 2d ago</span>
+                  <span>1.2k views</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Repeat 2 more similar cards -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/20 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-30">✍️</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Why I Write at 5 AM</h3>
+                <p class="text-ink-gray text-sm mb-4 line-clamp-3">
+                  The magic of early mornings in a city that never sleeps...
+                </p>
+                <div class="flex justify-between text-xs text-ink-gray mt-4">
+                  <span>@lagospen • 1w ago</span>
+                  <span>3.4k views</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/20 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-30">☕</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Coffee & Characters</h3>
+                <p class="text-ink-gray text-sm mb-4 line-clamp-3">
+                  How my morning routine shapes the people in my stories...
+                </p>
+                <div class="flex justify-between text-xs text-ink-gray mt-4">
+                  <span>@storybrewer • 3d ago</span>
+                  <span>890 views</span>
+                </div>
+              </div>
+            </div> {% endcomment %}
+          </div>
+        </section>
+
+        <!-- Featured Books -->
+        <section class="mb-16">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold">Featured Books</h2>
+            <a href="#" class="text-ink-accent font-medium hover:underline">View All →</a>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/30 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-40">📖</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Echoes of the Sahel</h3>
+                <p class="text-ink-gray text-sm mb-2">Speculative Fiction • 12 chapters</p>
+                <div class="w-full bg-ink-light rounded-full h-2 mb-4">
+                  <div class="bg-ink-accent h-2 rounded-full" style="width: 75%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-ink-gray">
+                  <span>@sahelscribe</span>
+                  <span>4.2k readers</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Repeat 2 more similar book cards -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/30 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-40">🖤</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Midnight in Abuja</h3>
+                <p class="text-ink-gray text-sm mb-2">Literary Fiction • 8 chapters</p>
+                <div class="w-full bg-ink-light rounded-full h-2 mb-4">
+                  <div class="bg-ink-accent h-2 rounded-full" style="width: 60%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-ink-gray">
+                  <span>@nightpen</span>
+                  <span>2.8k readers</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/50 hover:border-ink-accent transition group">
+              <div class="h-48 bg-gradient-to-br from-ink-accent/30 to-ink-light flex items-center justify-center">
+                <span class="text-7xl opacity-40">🌿</span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-ink-accent">Roots & Rivers</h3>
+                <p class="text-ink-gray text-sm mb-2">Poetry Collection • Complete</p>
+                <div class="w-full bg-ink-accent h-2 rounded-full mb-4"></div>
+                <div class="flex justify-between text-xs text-ink-gray">
+                  <span>@riverpoet</span>
+                  <span>6.1k readers</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-ink-text text-white py-8 text-center">
+    <p>© 2026 InkEcho — Built with love in Abuja</p>
+  </footer>
+
+</body>
+</html>

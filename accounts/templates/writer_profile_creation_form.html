@@ -1,0 +1,65 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Your Writer Profile — InkEcho</title>
+  <link rel="stylesheet" rel="{% static 'css/output.css' %}">
+  {% tailwind_css %}
+</head>
+<body class="bg-ink-bg text-ink-text min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-lg">
+
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-bold text-ink-accent mb-3">Welcome, {{ request.user.username }}!</h1>
+      <p class="text-lg text-ink-gray">Tell us a bit more about yourself to complete your profile</p>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-10 border border-ink-light/50">
+
+      <form method="post" action='{% url "register_as_writer"%}' enctype="multipart/form-data" class="space-y-8">
+        {% csrf_token %}
+
+        <!-- Pen Name -->
+        <div>
+          <label class="block text-sm font-medium text-ink-gray mb-2">Pen Name <span class="text-red-500">*</span></label>
+                 {{ form.pen_name }}
+        </div>
+
+        <!-- Profile Picture -->
+        <div>
+          <label class="block text-sm font-medium text-ink-gray mb-2">Profile Picture</label>
+                 {{ form.profile_picture }}
+          <p class="mt-2 text-sm text-ink-gray">Recommended: square image, max 2MB</p>
+        </div>
+
+        <!-- Writer Bio -->
+        <div>
+          <label class="block text-sm font-medium text-ink-gray mb-2">About You (Bio)</label>
+                    {{ form.writer_bio }}
+        </div>
+
+        <!-- Genres (optional) -->
+        <div>
+          <label class="block text-sm font-medium text-ink-gray mb-2">Genres You Write In (comma separated, optional)</label>
+                 {{ form.genres }}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+                class="w-full py-5 bg-ink-accent text-white font-semibold rounded-2xl shadow-lg hover:bg-ink-accent-light hover:shadow-xl transition transform hover:-translate-y-0.5">
+          Complete Profile & Start Writing
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-ink-gray">
+        You can edit these details later in your profile settings.
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>

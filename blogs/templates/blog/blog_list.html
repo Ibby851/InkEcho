@@ -1,0 +1,226 @@
+{% load static tailwind_tags %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Blogs — InkEcho</title>
+  <script src="{% static 'django_htmx/htmx.min.js' %}"></script>
+  {% tailwind_css %}
+</head>
+<body class="bg-ink-bg text-ink-text antialiased min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-ink-bg/95 backdrop-blur-sm border-b border-ink-light shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="text-3xl md:text-4xl font-extrabold text-ink-accent tracking-tight">
+        InkEcho
+      </a>
+
+      <div class="flex items-center gap-6">
+        <!-- New Blog Post Button – visible only to writers -->
+        {% if user.is_authenticated and user.profile.is_writer %}
+          <a href="{% url 'blog_create' %}" 
+             class="hidden sm:flex items-center gap-3 px-7 py-3.5 bg-ink-accent text-white font-semibold rounded-xl shadow-md hover:bg-ink-accent-light hover:shadow-lg transition transform hover:-translate-y-0.5">
+            <span class="text-xl">✍️</span> New Blog Post
+          </a>
+        {% endif %}
+
+        <a href="#" class="text-ink-gray hover:text-ink-accent transition hidden sm:block">Explore</a>
+        <div class="w-10 h-10 rounded-full bg-ink-accent-light flex items-center justify-center text-white font-semibold shadow-sm">
+          I
+        </div>
+        <button class="md:hidden text-ink-text text-2xl">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex min-h-[calc(100vh-88px)]">
+
+    <!-- Sidebar -->
+    <aside class="hidden md:block w-72 bg-white border-r border-ink-light flex-shrink-0">
+      <nav class="py-8 px-6 space-y-2">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>🏠</span> Home
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>📚</span> Library
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 bg-ink-accent/10 text-ink-accent rounded-xl font-medium">
+          <span>📰</span> All Blogs
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>📖</span> All Books
+        </a>
+        <a href="#" class="flex items-center gap-4 px-5 py-3 hover:bg-ink-light/50 rounded-xl transition">
+          <span>🔍</span> Discover Writers
+        </a>
+      </nav>
+
+      <div class="px-6 mt-12">
+        <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-ink-accent/5 to-ink-light h-48 flex items-center justify-center">
+          <span class="text-8xl opacity-20">🖋️</span>
+        </div>
+        <p class="text-center mt-4 text-sm text-ink-gray italic">
+          "Short thoughts, deep echoes."
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 md:p-12 overflow-auto">
+
+      <div class="max-w-6xl mx-auto">
+
+        <!-- Intro / Hero Section -->
+        <header class="mb-16 text-center">
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+            All Blogs
+          </h1>
+          <p class="text-xl md:text-2xl text-ink-gray max-w-4xl mx-auto leading-relaxed">
+            Personal essays, quiet observations, micro-stories, reflections, and thoughts from writers across Nigeria and the diaspora.
+          </p>
+        </header>
+
+        <!-- Search Bar (centered, elegant) -->
+        <div class="mb-20 max-w-3xl mx-auto">
+          <div class="relative">
+            <input 
+              name="search_input"
+              type="text" 
+              placeholder="Search by title, writer, mood, or keyword…" 
+              class="w-full px-8 py-6 pl-16 border border-ink-light rounded-2xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition text-lg placeholder-ink-gray/60 shadow-sm"
+              hx-get="{% url 'search_blog' %}"  hx-trigger="keyup delay:500ms" hx-swap="outerHTML" hx-target="#blog_box" 
+            />
+            <span class="absolute left-6 top-1/2 -translate-y-1/2 text-ink-gray text-2xl">🔍</span>
+          </div>
+        </div>
+
+        <!-- Featured Blogs (larger, editorial style) -->
+        <section class="mb-20">
+          <h2 class="text-4xl font-bold mb-10 text-center">Featured & Pinned</h2>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12" id="blog_box" >
+
+            <!-- Featured Card (bigger visual impact) -->
+             {% for blog in blogs %}
+                {% if forloop.last and page_obj.has_next %}
+                  <div class="group bg-white rounded-3xl shadow-xl overflow-hidden border border-ink-light/30 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-2xl" hx-get="{% url 'blog_list' %}?page={{ page_obj.next_page_number }}" hx-trigger="revealed" hx-target='this' hx-swap="afterend">
+                    <div class="h-80 bg-gradient-to-br from-ink-accent/20 to-ink-light relative">
+                      <div class="absolute inset-0 bg-gradient-to-t from-ink-bg/90 via-ink-bg/40 to-transparent"></div>
+                      <div class="absolute bottom-10 left-10 right-10">
+                        <h3 class="text-4xl font-bold text-ink-text drop-shadow-lg leading-tight">
+
+                          <a href="{{ blog.get_absolute_url}}">
+                          {{ blog.title }}
+                          </a>
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="p-10">
+                      <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+                        {% comment %} There’s something sacred about the first rain after harmattan — how it washes the dust off everything, including memory… {% endcomment %}
+                        {{ blog.summary }}
+                      </p>
+                      <div class="flex items-center justify-between text-base">
+                        <div class="flex items-center gap-4">
+                          <div class="w-12 h-12 rounded-full bg-ink-accent/20 flex items-center justify-center text-ink-accent font-medium text-xl">A</div>
+                          <span class="font-medium">{{ blog.author.pen_name }}</span>
+                        </div>
+                        <span class="text-ink-gray">• {{ blog.created_at | naturaltime }}</span>
+                      </div>
+                    </div>
+                  </div>
+                
+                {% else %}
+
+                  <div class="group bg-white rounded-3xl shadow-xl overflow-hidden border border-ink-light/30 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-2xl">
+                    <div class="h-80 bg-gradient-to-br from-ink-accent/20 to-ink-light relative">
+                      <div class="absolute inset-0 bg-gradient-to-t from-ink-bg/90 via-ink-bg/40 to-transparent"></div>
+                      <div class="absolute bottom-10 left-10 right-10">
+                        <h3 class="text-4xl font-bold text-ink-text drop-shadow-lg leading-tight">
+
+                          <a href="{{ blog.get_absolute_url}}">
+                          {{ blog.title }}
+                          </a>
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="p-10">
+                      <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+                        {% comment %} There’s something sacred about the first rain after harmattan — how it washes the dust off everything, including memory… {% endcomment %}
+                        {{ blog.summary }}
+                      </p>
+                      <div class="flex items-center justify-between text-base">
+                        <div class="flex items-center gap-4">
+                          <div class="w-12 h-12 rounded-full bg-ink-accent/20 flex items-center justify-center text-ink-accent font-medium text-xl">A</div>
+                          <span class="font-medium">{{ blog.author.pen_name }}</span>
+                        </div>
+                        <span class="text-ink-gray">• {{ blog.created_at | naturaltime }}</span>
+                      </div>
+                    </div>
+                  </div>
+                
+                {% endif %}
+
+              {% endfor %}
+
+            <!-- Two more featured cards (repeat structure with different content) -->
+
+          </div>
+        </section>
+
+        <!-- All Blogs Grid -->
+        <section>
+          <h2 class="text-4xl font-bold mb-10 text-center">More Stories</h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!-- Standard Card -->
+            <div class="group bg-white rounded-2xl shadow-md overflow-hidden border border-ink-light/40 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-lg">
+              <div class="h-56 bg-gradient-to-br from-ink-accent/10 to-ink-light flex items-center justify-center">
+                <span class="text-8xl opacity-20">☕</span>
+              </div>
+              <div class="p-8">
+                <h3 class="text-2xl md:text-3xl font-semibold mb-4 group-hover:text-ink-accent transition-colors">
+                  Coffee Shop Writing Rituals in Abuja
+                </h3>
+                <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+                  The best corners, quietest hours, and why caffeine is a writer's best friend…
+                </p>
+                <div class="flex justify-between items-center text-base text-ink-gray">
+                  <span>@cityscribe</span>
+                  <span>980 views • 5 days ago</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- More cards... -->
+
+          </div>
+
+          <div class="mt-20 text-center">
+            <button class="px-12 py-6 bg-ink-accent text-white font-semibold text-lg rounded-2xl shadow-lg hover:bg-ink-accent-light hover:shadow-xl transition transform hover:-translate-y-1">
+              Load More Stories
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-ink-text text-white py-16 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-lg mb-6">© 2026 InkEcho — Built with love in Lagos</p>
+      <div class="flex justify-center gap-10 text-sm">
+        <a href="#" class="hover:text-ink-accent-light transition">About</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Privacy</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Terms</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

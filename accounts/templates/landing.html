@@ -1,0 +1,149 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InkEcho — Where Stories Find Their Echo</title>
+  <meta name="description" content="A calm, beautiful space for writers to publish short posts, serialise books chapter by chapter, and grow an audience without distractions."/>
+  {% tailwind_css %}
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ink-bg':      '#fdfaf7',
+            'ink-text':    '#1f1f1f',
+            'ink-accent':  '#4a7c59',
+            'ink-accent-light': '#6b9e7a',
+            'ink-gray':    '#5c5c5c',
+            'ink-light':   '#e5e5e5',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-ink-bg text-ink-text antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-ink-bg/95 backdrop-blur-sm border-b border-ink-light">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="text-3xl md:text-4xl font-extrabold text-ink-accent tracking-tight">
+        InkEcho
+      </a>
+
+      <nav class="hidden md:flex items-center gap-10">
+        <a href="#features" class="font-medium hover:text-ink-accent transition">Features</a>
+        <a href="#" class="font-medium hover:text-ink-accent transition">Explore</a>
+        <a href="{% url 'login' %}" class="font-medium hover:text-ink-accent transition">Log in</a>
+        <a href="{% url 'register' %}" 
+           class="px-7 py-3.5 bg-ink-accent text-white font-semibold rounded-xl shadow-md hover:bg-ink-accent-light hover:shadow-lg transition transform hover:-translate-y-0.5">
+          Start Writing — Free
+        </a>
+      </nav>
+
+      <button class="md:hidden text-ink-text text-2xl">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative pt-20 pb-32 md:pt-32 md:pb-48 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-ink-accent/5 via-transparent to-ink-light/10 pointer-events-none"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6 text-center">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-8 tracking-tight">
+        Where Stories<br class="hidden sm:block"/> Find Their Echo
+      </h1>
+
+      <p class="text-xl md:text-2xl text-ink-gray max-w-3xl mx-auto mb-12 leading-relaxed">
+        A calm, beautiful space for writers to publish short posts,<br class="hidden sm:inline"/>
+        serialise books chapter by chapter, and grow an audience without distractions.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-6 justify-center">
+        <a href="/signup" 
+           class="px-12 py-6 bg-ink-accent text-white text-xl font-semibold rounded-2xl shadow-xl hover:bg-ink-accent-light hover:shadow-2xl transition transform hover:-translate-y-1">
+          Start Writing — It's Free
+        </a>
+        <a href="/explore" 
+           class="px-12 py-6 border-2 border-ink-accent text-ink-accent text-xl font-semibold rounded-2xl hover:bg-ink-accent hover:text-white transition">
+          Explore Stories →
+        </a>
+      </div>
+
+      <p class="mt-10 text-sm text-ink-gray">
+        No ads • No algorithm pressure • Just your words and your readers
+      </p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 md:py-32 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 md:mb-24">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">Built for Writers</h2>
+        <p class="text-xl text-ink-gray max-w-3xl mx-auto">
+          Everything you need to write, publish, and connect — nothing you don't.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10 md:gap-12">
+        <div class="bg-ink-bg p-10 rounded-3xl shadow-lg border border-ink-light/50 hover:border-ink-accent/50 transition group">
+          <div class="text-5xl mb-6 opacity-80 group-hover:opacity-100 transition">✍️</div>
+          <h3 class="text-2xl font-bold mb-4">Blogs & Books — One Place</h3>
+          <p class="text-ink-gray leading-relaxed">
+            Write short reflections today, deep novels tomorrow. Automatic chapters, table of contents, progress bars.
+          </p>
+        </div>
+
+        <div class="bg-ink-bg p-10 rounded-3xl shadow-lg border border-ink-light/50 hover:border-ink-accent/50 transition group">
+          <div class="text-5xl mb-6 opacity-80 group-hover:opacity-100 transition">📈</div>
+          <h3 class="text-2xl font-bold mb-4">Writer-First Tools</h3>
+          <p class="text-ink-gray leading-relaxed">
+            Private drafts, word count goals, chapter reordering, clean reader view, dark mode, EPUB/PDF export.
+          </p>
+        </div>
+
+        <div class="bg-ink-bg p-10 rounded-3xl shadow-lg border border-ink-light/50 hover:border-ink-accent/50 transition group">
+          <div class="text-5xl mb-6 opacity-80 group-hover:opacity-100 transition">❤️</div>
+          <h3 class="text-2xl font-bold mb-4">Grow Your Readers</h3>
+          <p class="text-ink-gray leading-relaxed">
+            Gentle comments, follow authors, chapter notifications, featured stories — no toxic engagement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-24 md:py-32 bg-gradient-to-br from-ink-accent/5 to-ink-light/10">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-8">
+        Your story deserves to be heard
+      </h2>
+      <p class="text-xl md:text-2xl text-ink-gray mb-12 max-w-3xl mx-auto">
+        Join writers from Lagos, Abuja, and beyond who are sharing their voice — without noise or pressure.
+      </p>
+      <a href="{% url 'register' %}" 
+         class="inline-block px-14 py-7 bg-ink-accent text-white text-2xl font-bold rounded-2xl shadow-2xl hover:bg-ink-accent-light hover:shadow-3xl transition transform hover:-translate-y-1">
+        Begin Your Journey — Free Forever
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-ink-text text-white py-16 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-lg mb-6">© 2026 InkEcho — Built with love in Lagos</p>
+      <div class="flex justify-center gap-10 text-sm">
+        <a href="#" class="hover:text-ink-accent-light transition">About</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Privacy</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Terms</a>
+        <a href="#" class="hover:text-ink-accent-light transition">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

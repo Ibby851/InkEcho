@@ -1,0 +1,155 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log in — InkEcho</title>
+  <meta name="description" content="Log in to InkEcho — continue writing, reading, and connecting with stories."/>
+  {% tailwind_css %}
+</head>
+<body class="bg-ink-bg text-ink-text antialiased min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-ink-bg/95 backdrop-blur-sm border-b border-ink-light">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="text-3xl md:text-4xl font-extrabold text-ink-accent tracking-tight">
+        InkEcho
+      </a>
+
+      <div class="flex items-center gap-6">
+        <a href="{% url 'landing_page' %}" class="font-medium hover:text-ink-accent transition">Home</a>
+        <a href="{% url 'register' %}" class="px-6 py-3 border-2 border-ink-accent text-ink-accent font-medium rounded-xl hover:bg-ink-accent hover:text-white transition">
+          Sign up
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="min-h-[calc(100vh-88px)] flex items-center justify-center py-16 px-6">
+    <div class="w-full max-w-md">
+
+      <!-- Card -->
+      <div class="bg-white rounded-3xl shadow-xl border border-ink-light/50 p-10 md:p-12">
+
+        <div class="text-center mb-10">
+          <h1 class="text-4xl font-bold mb-3">Welcome back</h1>
+          <p class="text-lg text-ink-gray">
+            Log in to continue writing and reading stories
+          </p>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-6" method='post' action="{% url 'login' %}">
+          {% csrf_token %}
+
+          <!-- Email / Username -->
+          <div>
+            <label for="identifier" class="block text-sm font-medium text-ink-gray mb-2">
+              Email or username
+            </label>
+            <input
+              type="text"
+              id="identifier"
+              name="username"
+              required
+              autocomplete="username"
+              placeholder="basseydora@gmail.com"
+              class="w-full px-5 py-4 border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition placeholder-ink-gray/60"
+            />
+          {% if form.username.errors %}
+            <div style='color:red;'>
+              {{ form.username.errors }}
+            </div>
+          {% endif %}
+          </div>
+
+          <!-- Password -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="password" class="block text-sm font-medium text-ink-gray">
+                Password
+              </label>
+              <a href="#" class="text-sm text-ink-accent hover:underline">
+                Forgot password?
+              </a>
+            </div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="w-full px-5 py-4 border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition placeholder-ink-gray/60"
+            />
+          {% if form.password.errors %}
+            <div style='color:red;'>
+              {{ form.password.errors }}
+            </div>
+          {% endif %}
+
+          </div>
+
+          <!-- Remember me -->
+          <div class="flex items-center">
+            <input
+              id="remember"
+              name="remember"
+              type="checkbox"
+              class="h-5 w-5 text-ink-accent border-ink-light rounded focus:ring-ink-accent/30"
+            />
+            <label for="remember" class="ml-3 block text-sm text-ink-gray">
+              Remember me
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="w-full py-5 bg-ink-accent text-white font-semibold text-lg rounded-2xl shadow-lg hover:bg-ink-accent-light hover:shadow-xl transition transform hover:-translate-y-0.5"
+          >
+            Log in
+          </button>
+
+        </form>
+
+        <!-- Social / Alternative -->
+        <div class="mt-10 text-center">
+          <p class="text-sm text-ink-gray mb-6">Or continue with</p>
+          <div class="flex gap-4 justify-center">
+            <button class="flex-1 py-4 border border-ink-light rounded-xl hover:bg-ink-light/50 transition flex items-center justify-center gap-3">
+              <span class="text-xl">G</span> Google
+            </button>
+            <button class="flex-1 py-4 border border-ink-light rounded-xl hover:bg-ink-light/50 transition flex items-center justify-center gap-3">
+              <span class="text-xl">f</span> Facebook
+            </button>
+          </div>
+        </div>
+
+        <!-- Sign up link -->
+        <p class="mt-10 text-center text-ink-gray">
+          Don't have an account yet? 
+          <a href="{% url 'register' %}" class="text-ink-accent font-medium hover:underline">
+            Sign up for free
+          </a>
+        </p>
+
+      </div>
+
+      <!-- Trust note -->
+      <p class="mt-8 text-center text-sm text-ink-gray">
+        Secure login • We never share your data
+      </p>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-ink-text text-white py-8 text-center text-sm">
+    <p>© 2026 InkEcho — Built with care in Lagos</p>
+  </footer>
+
+</body>
+</html>

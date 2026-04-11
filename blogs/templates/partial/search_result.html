@@ -1,0 +1,51 @@
+{% load humanize %}
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12" id="blog_box" hx-swap="outerHTML">
+<!-- Featured Card (bigger visual impact) -->
+    {% for blog in blogs %}
+
+    <div class="group bg-white rounded-3xl shadow-xl overflow-hidden border border-ink-light/30 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-2xl">
+        <div class="h-80 bg-gradient-to-br from-ink-accent/20 to-ink-light relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-ink-bg/90 via-ink-bg/40 to-transparent"></div>
+            <div class="absolute bottom-10 left-10 right-10">
+            <h3 class="text-4xl font-bold text-ink-text drop-shadow-lg leading-tight">
+
+                <a href="{{ blog.get_absolute_url}}">
+                {{ blog.title }}
+                </a>
+            </h3>
+            </div>
+        </div>
+        <div class="p-10">
+            <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+            {% comment %} There’s something sacred about the first rain after harmattan — how it washes the dust off everything, including memory… {% endcomment %}
+            {{ blog.summary }}
+            </p>
+            <div class="flex items-center justify-between text-base">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-ink-accent/20 flex items-center justify-center text-ink-accent font-medium text-xl">A</div>
+                <span class="font-medium">{{ blog.author.pen_name }}</span>
+            </div>
+            <span class="text-ink-gray">• {{ blog.created_at | naturaltime }}</span>
+            </div>
+        </div>
+    </div>
+    
+    {% empty %}
+        <div class="bg-white rounded-3xl shadow-sm border border-ink-light/50 p-12 md:p-16 text-center my-12" id="blog_box">
+            <div class="mx-auto w-16 h-16 flex items-center justify-center bg-ink-light/60 rounded-2xl mb-6">
+                <span class="text-4xl opacity-40">💬</span>
+            </div>
+            <h3 class="text-2xl font-semibold text-ink-text mb-3">
+            No posts found
+            </h3>
+            <p class="text-ink-gray text-lg max-w-md mx-auto leading-relaxed">
+            We couldn't find any blog posts matching your keword <br>
+            Try a different keyword or browse all posts below.
+            </p>
+        </div>
+    {% endfor %}
+
+<!-- Two more featured cards (repeat structure with different content) -->
+
+</div>

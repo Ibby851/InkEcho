@@ -1,0 +1,59 @@
+ 
+  {% load humanize %}
+  {% for blog in blogs %}
+  {% if forloop.last and page_obj.has_next %}
+    <div class="group bg-white rounded-3xl shadow-xl overflow-hidden border border-ink-light/30 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-2xl" hx-get="{% url 'blog_list' %}?page={{ page_obj.next_page_number }}" hx-trigger='revealed' hx-target='this' hx-swap="afterend">
+      <div class="h-80 bg-gradient-to-br from-ink-accent/20 to-ink-light relative">
+        <div class="absolute inset-0 bg-gradient-to-t from-ink-bg/90 via-ink-bg/40 to-transparent"></div>
+        <div class="absolute bottom-10 left-10 right-10">
+          <h3 class="text-4xl font-bold text-ink-text drop-shadow-lg leading-tight">
+
+            <a href="{{ blog.get_absolute_url}}">
+            {{ blog.title }}
+            </a>
+          </h3>
+        </div>
+      </div>
+      <div class="p-10">
+        <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+          {% comment %} There’s something sacred about the first rain after harmattan — how it washes the dust off everything, including memory… {% endcomment %}
+          {{ blog.summary }}
+        </p>
+        <div class="flex items-center justify-between text-base">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-ink-accent/20 flex items-center justify-center text-ink-accent font-medium text-xl">A</div>
+            <span class="font-medium">{{ blog.author.pen_name }}</span>
+          </div>
+          <span class="text-ink-gray">• {{ blog.created_at | naturaltime }}</span>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="group bg-white rounded-3xl shadow-xl overflow-hidden border border-ink-light/30 hover:border-ink-accent/50 transition-all duration-300 hover:shadow-2xl">
+      <div class="h-80 bg-gradient-to-br from-ink-accent/20 to-ink-light relative">
+        <div class="absolute inset-0 bg-gradient-to-t from-ink-bg/90 via-ink-bg/40 to-transparent"></div>
+        <div class="absolute bottom-10 left-10 right-10">
+          <h3 class="text-4xl font-bold text-ink-text drop-shadow-lg leading-tight">
+
+            <a href="{{ blog.get_absolute_url}}">
+            {{ blog.title }}
+            </a>
+          </h3>
+        </div>
+      </div>
+      <div class="p-10">
+        <p class="text-ink-gray mb-6 text-lg line-clamp-3">
+          {% comment %} There’s something sacred about the first rain after harmattan — how it washes the dust off everything, including memory… {% endcomment %}
+          {{ blog.summary }}
+        </p>
+        <div class="flex items-center justify-between text-base">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-ink-accent/20 flex items-center justify-center text-ink-accent font-medium text-xl">A</div>
+            <span class="font-medium">{{ blog.author.pen_name }}</span>
+          </div>
+          <span class="text-ink-gray">• {{ blog.created_at | naturaltime }}</span>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}

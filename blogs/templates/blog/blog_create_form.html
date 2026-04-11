@@ -1,0 +1,180 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     <script src="{% static 'django_htmx/htmx.min.js' %}"></script>
+  <title>New Blog Post — InkEcho</title>
+  {% tailwind_css %}
+  {{ form.media }}
+  <style>
+    .ck.ck-editor__editable.ck-content{
+    
+    h1{ font-size : 2.5rem ; font-weight:800; margin: 1.25rem 0 0.75rem; line-height: 1.2; }
+    h2{ font-size : 2rem ; font-weight:700; margin: 1.5rem 0 1rem; line-height: 1.3; }
+    h3{ font-size : 1.75rem ; font-weight:600; margin: 1.25rem 0 0.75rem; line-height: 1.4; }
+    h4{ font-size : 1.5rem ; font-weight:600; margin: 1.25rem 0 0.75rem; line-height: 1.2; }
+    ul, ol {
+      list-style: revert;
+      margin: 1rem 0 1rem 2.5rem;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 0.4rem;
+    }
+    p{
+      margin: 0.5rem 0;
+    }}
+  </style>
+</head>
+<body class="bg-ink-bg text-ink-text antialiased min-h-screen">
+
+  <!-- Header (simple for editor page) -->
+  <header class="sticky top-0 z-50 bg-ink-bg/95 backdrop-blur-sm border-b border-ink-light shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="text-3xl font-extrabold text-ink-accent tracking-tight">InkEcho</a>
+      <div class="flex items-center gap-6">
+        <a href="{% url 'dashboard' %}" class="text-ink-gray hover:text-ink-accent transition">Cancel</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="min-h-[calc(100vh-88px)] py-12 px-6">
+
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Form Card -->
+      <div class="bg-white rounded-3xl shadow-xl border border-ink-light/50 p-8 md:p-12">
+
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold mb-3">Create New Blog Post</h1>
+          <p class="text-xl text-ink-gray">
+            Share your thoughts, reflections, or stories with the community.
+          </p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-10">
+
+          {% csrf_token %}
+
+          <!-- Title -->
+          <div>
+            <label for="id_title" class="block text-lg font-medium text-ink-gray mb-3">
+              Title <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              name="{{ form.title.name }}" 
+              id="id_title" 
+              required 
+              placeholder="Give your post a clear, engaging title"
+              class="w-full px-6 py-5 border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition text-lg placeholder-ink-gray/60"
+            />
+          </div>
+
+          <!-- Excerpt / Teaser -->
+          <div>
+            <label for="id_excerpt" class="block text-lg font-medium text-ink-gray mb-3">
+              Excerpt <span class="text-ink-gray text-base">(short preview — appears in lists)</span>
+            </label>
+            <textarea 
+              name="{{ form.summary.name }}" 
+              id="id_excerpt" 
+              rows="4"
+              placeholder="A short summary or hook that makes people want to read more (max 300 characters)"
+              class="w-full px-6 py-5 border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition text-lg placeholder-ink-gray/60 resize-y"
+            ></textarea>
+          </div>
+
+          <!-- Featured Image -->
+          <div>
+            <label for="id_featured_image" class="block text-lg font-medium text-ink-gray mb-3">
+              Featured Image (optional)
+            </label>
+            <input 
+              type="file" 
+              name="{{form.featured_image.name}}" 
+              id="id_featured_image" 
+              accept="image/*"
+              class="w-full px-6 py-5 border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition text-lg file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-ink-light file:text-ink-text hover:file:bg-ink-accent/10"
+            />
+            <p class="mt-2 text-sm text-ink-gray">
+              Recommended size: 1200×630 px (landscape)
+            </p>
+          </div>
+
+          <!-- Rich Text Content (CKEditor) -->
+          <div>
+            <label for="id_content" class="block text-lg font-medium text-ink-gray mb-3">
+              Content <span class="text-red-500">*</span>
+            </label>
+            {% comment %} <textarea 
+              name="{{ form.content.name}}" 
+              id="id_content" 
+              class="w-full border border-ink-light rounded-xl focus:outline-none focus:ring-2 focus:ring-ink-accent/30 focus:border-ink-accent transition min-h-[500px]"
+            ></textarea> {% endcomment %}
+            {{ form.content }}
+          </div>
+
+          <!-- Status (Draft / Published) -->
+          <div class="bg-ink-light/30 p-8 rounded-2xl border border-ink-light/50">
+            <h3 class="text-xl font-semibold mb-6 text-center">Publishing Status</h3>
+            <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
+              <!-- Draft -->
+              <label class="flex items-center gap-4 cursor-pointer group">
+                <input 
+                  type="radio" 
+                  name="{{ form.status.name}}" 
+                  value="{{ form.status.field.choices.0.0 }}" 
+                  id="status_draft" 
+                  checked 
+                  class="h-6 w-6 text-ink-accent border-ink-light focus:ring-ink-accent/30"
+                />
+                <div class="text-center">
+                  <div class="text-xl font-medium group-hover:text-ink-accent transition">Draft</div>
+                  <div class="text-sm text-ink-gray">Save privately — visible only to you</div>
+                </div>
+              </label>
+
+              <!-- Published -->
+              <label class="flex items-center gap-4 cursor-pointer group">
+                <input 
+                  type="radio" 
+                  name="{{ form.status.name }}" 
+                  value="{{ form.status.field.choices.1.0}}" 
+                  id="status_published" 
+                  class="h-6 w-6 text-ink-accent border-ink-light focus:ring-ink-accent/30"
+                />
+                <div class="text-center">
+                  <div class="text-xl font-medium group-hover:text-ink-accent transition">Publish Now</div>
+                  <div class="text-sm text-ink-gray">Make it live and visible to everyone</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit Buttons -->
+          <div class="flex flex-col sm:flex-row gap-6 justify-center pt-8 border-t border-ink-light/50">
+            <button type="submit"
+                    class="px-12 py-5 bg-ink-light text-ink-text font-semibold rounded-xl hover:bg-ink-gray/20 transition transform hover:-translate-y-1">
+              Save as Draft
+            </button>
+            <button type="submit"
+                    class="px-12 py-5 bg-ink-accent text-white font-semibold rounded-xl shadow-lg hover:bg-ink-accent-light hover:shadow-xl transition transform hover:-translate-y-1">
+              Publish Now
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </main>
+
+  <!-- Footer -->
+  <footer class="bg-ink-text text-white py-12 text-center">
+    <p class="text-lg">© 2026 InkEcho — Built with love in Lagos</p>
+  </footer>
+
+</body>
+</html>

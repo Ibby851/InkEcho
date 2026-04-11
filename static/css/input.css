@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+@theme{
+    --color-ink-bg: #fdfaf7;
+    --color-ink-text:#1f1f1f;
+    --color-ink-accent:#4a7c59;
+    --color-ink-accent-light:#6b9e7a;
+    --color-ink-gray:#5c5c5c;
+    --color-ink-light:#e5e5e5;
+    &[data-theme="dark"]{
+        --color-ink-bg: #1a1a1a;
+        --color-ink-text: #f0f0f0;
+    }
+}
